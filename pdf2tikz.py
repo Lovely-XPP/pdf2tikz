@@ -3,7 +3,7 @@ import os, sys
 
 
 inkscape_path = "/Applications/Inkscape.app/Contents/MacOS/inkscape"
-scale = 1/60
+scale = 0.1
 
 eps_folder = os.path.join(sys.path[0], 'eps')
 pdf_folder = os.path.join(sys.path[0], 'pdf')
@@ -30,7 +30,7 @@ def eps2pdf():
     for info in os.walk(eps_folder):
         path = info[0]
         files = info[2]
-        subpath = path
+        save_path = pdf_folder
         if path != eps_folder:
             subpath = path.split(eps_folder)[1].strip("/").strip("\\")
             save_path = os.path.join(pdf_folder, subpath)
@@ -54,7 +54,7 @@ def pdf2svg():
     for info in os.walk(pdf_folder):
         path = info[0]
         files = info[2]
-        subpath = path
+        save_path = svg_folder
         if path != pdf_folder:
             subpath = path.split(pdf_folder)[1].strip("/").strip("\\")
             save_path = os.path.join(svg_folder, subpath)
@@ -79,7 +79,7 @@ def svg2tikz():
     for info in os.walk(svg_folder):
         path = info[0]
         files = info[2]
-        subpath = path
+        save_path = tikz_folder
         if path != svg_folder:
             subpath = path.split(svg_folder)[1].strip("/").strip("\\")
             save_path = os.path.join(tikz_folder, subpath)
@@ -96,7 +96,9 @@ def svg2tikz():
                 code = code.split("\globalscale {", 1)
                 code_f = code[0]
                 code_a = code[1].split("}\n", 1)[1]
-                code = code_f + "\globalscale {" + f"{scale:.8f}" + "}\n" + code_a
+                code = code_f + "\globalscale {" + f"{1:.4f}" + "}\n" + code_a
+                code = code.replace(
+                    "\path[", "%\path[", 1)
             except:
                 error_svg.append(origin_file.split(svg_folder)[1])
                 print(f"   {origin_file.split(svg_folder)[1]} \t xx")
@@ -116,8 +118,8 @@ def svg2tikz():
 
 def main():
     init()
-    #eps2pdf()
-    #pdf2svg()
+    eps2pdf()
+    pdf2svg()
     svg2tikz()
 
 if __name__ == "__main__":

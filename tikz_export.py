@@ -907,7 +907,7 @@ class TikZPathExporter(inkex.Effect):
     def update_height(self, y_val):
         """Compute the distance between the point and the bottom of the document"""
         if not self.options.noreversey:
-            return self.height - y_val
+            return  - y_val
         return y_val
 
     def get_selected(self):

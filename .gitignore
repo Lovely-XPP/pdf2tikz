@@ -4,3 +4,6 @@
 *.tex
 *.DS_Store
 *.pyc
+*.gz
+*.log
+*.aux
