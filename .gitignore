@@ -1,0 +1,6 @@
+*.eps
+*.pdf
+*.svg
+*.tex
+*.DS_Store
+*.pyc
