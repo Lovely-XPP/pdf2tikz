@@ -11,3 +11,6 @@ For example:
 ```python
 inkscape_path = "/Applications/Inkscape.app/Contents/MacOS/inkscape"
 ```
+
+## Credit
+- [xyz2tex/svg2tikz](https://github.com/xyz2tex/svg2tikz)
