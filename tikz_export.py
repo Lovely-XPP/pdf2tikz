@@ -949,6 +949,13 @@ class TikZPathExporter(inkex.Effect):
     def transform(self, coord_list, cmd=None):
         """Apply transformations to input coordinates"""
         coord_transformed = []
+        coord_list = list(coord_list)
+        for idx in range(len(coord_list)):
+            try:
+                coord_list[idx] = coord_list[idx] * self.options.scale
+            except TypeError:
+                continue
+        coord_list = tuple(coord_list)
 
         if cmd == "Q":
             return tuple(coord_list)
@@ -1215,6 +1222,8 @@ class TikZPathExporter(inkex.Effect):
         for cmd, params in transform:
             if cmd == "translate":
                 x, y = [self.convert_unit(str(val)) for val in params]
+                x = x * self.options.scale
+                y = y * self.options.scale
                 if not self.options.noreversey:
                     y *= (
                         -1
@@ -1234,8 +1243,8 @@ class TikZPathExporter(inkex.Effect):
                 else:
                     options.append(f"rotate={params[0]}")
             elif cmd == "matrix":
-                tx = self.convert_unit(params[4])
-                ty = self.update_height(self.convert_unit(params[5]))
+                tx = self.convert_unit(params[4]) * self.options.scale
+                ty = self.update_height(self.convert_unit(params[5])) * self.options.scale
                 options.append(
                     f"cm={{ {params[0]},{params[1]},{params[2]}"
                     f",{params[3]},({tx},{ty})}}"

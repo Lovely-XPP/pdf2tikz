@@ -3,7 +3,8 @@ import os, sys
 
 
 inkscape_path = "/Applications/Inkscape.app/Contents/MacOS/inkscape"
-scale = 0.1
+scale = 0.01
+linewidth_scale = 0.1
 
 eps_folder = os.path.join(sys.path[0], 'eps')
 pdf_folder = os.path.join(sys.path[0], 'pdf')
@@ -96,7 +97,7 @@ def svg2tikz():
                 code = code.split("\globalscale {", 1)
                 code_f = code[0]
                 code_a = code[1].split("}\n", 1)[1]
-                code = code_f + "\globalscale {" + f"{1:.4f}" + "}\n" + code_a
+                code = code_f + "\globalscale {" + f"{1/linewidth_scale:.4f}" + "}\n" + code_a
                 code = code.replace(
                     "\path[", "%\path[", 1)
             except:
