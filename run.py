@@ -20,6 +20,8 @@ linewidth_scale = 0.1
 # output setting
 modes = ["standalone", "figonly", "codeonly"]
 outputmode = modes[1]
+combine_res = True
+
 
 if __name__ == "__main__":
     run = pdf2tikz(
@@ -31,6 +33,7 @@ if __name__ == "__main__":
         scale = scale,
         linewidth_scale = linewidth_scale,
         codeoutput=outputmode,
+        combine_res = combine_res,
         thread = thread
         )
     run.run()

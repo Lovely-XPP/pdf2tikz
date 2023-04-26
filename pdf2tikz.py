@@ -3,6 +3,13 @@ import multiprocessing
 import threading
 import os, sys
 
+TEMPLATE = r"""\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{tikz}
+\usepackage{capt-of}
+
+\begin{document}
+"""
 
 class pdf2tikz():
     def __init__(self, 
@@ -14,6 +21,7 @@ class pdf2tikz():
                  scale: float = 1,
                  linewidth_scale: float = 1,
                  codeoutput: str = "standalone",
+                 combine_res: bool = False,
                  thread: int = 1):
         # init var
         self.inkscape_path = inkscape_path
@@ -24,11 +32,13 @@ class pdf2tikz():
         self.scale = scale
         self.linewidth_scale = linewidth_scale
         self.codeoutput = codeoutput
+        self.combine_res = combine_res
         self.thread = thread
         self.eps_folder = os.path.join(sys.path[0], 'eps')
         self.pdf_folder = os.path.join(sys.path[0], 'pdf')
         self.svg_folder = os.path.join(sys.path[0], 'svg')
         self.tikz_folder = os.path.join(sys.path[0], 'tikz')
+        self.outfiles = []
         self.error_svg = []
 
         print("[Info] Start")
@@ -132,6 +142,23 @@ class pdf2tikz():
             for error in self.error_svg:
                 print(f"   {error}")
 
+    
+    ''' Generate main.tex to visualize all tikz code '''
+    def combine_tikz(self):
+        print("\n[Info] Generate main.tex")
+        main_code = TEMPLATE
+        self.outfiles.sort()
+        for idx, tikz_code in enumerate(self.outfiles):
+            filename = os.path.split(tikz_code)[1]
+            filename = os.path.splitext(filename)[0]
+            main_code = main_code + "\n" + r"\centerline{" + r"\input{" + tikz_code.strip("/") + r"}}" "\n"
+            main_code = main_code + r"\captionof{figure}{" + filename.replace("_", "\_") + r"}" + "\n"
+            main_code = main_code + r"\vspace{5mm}" + "\n\n"
+        main_code = main_code + "\n" + r"\end{document}"
+        main_file = os.path.join(self.tikz_folder, "main.tex")
+        with open(main_file, 'w') as f:
+            f.write(main_code)
+
 
     def thread_eps2pdf(self, ori: list, dest: list, id: int, thread: int = 1) -> None:
         for idx in range(id, len(ori), thread):
@@ -176,6 +203,7 @@ class pdf2tikz():
                 continue
             with open(save_file, 'w') as f:
                 f.write(code)
+            self.outfiles.append(save_file.split(self.tikz_folder)[1])
             print(f"   {origin_file.split(self.svg_folder)[1]} \t -> \t {save_file.split(self.tikz_folder)[1]}")
 
 
@@ -186,3 +214,5 @@ class pdf2tikz():
             self.pdf2svg()
         if self.svg_tikz:
             self.svg2tikz()
+        if self.combine_res:
+            self.combine_tikz()
