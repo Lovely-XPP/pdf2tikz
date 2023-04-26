@@ -18,7 +18,7 @@ scale = 0.02
 linewidth_scale = 0.1
 
 # output setting
-modes = ["standalone", "codeonly", "figonly"]
+modes = ["standalone", "figonly", "codeonly"]
 outputmode = modes[1]
 
 if __name__ == "__main__":

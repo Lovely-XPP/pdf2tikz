@@ -161,12 +161,11 @@ class pdf2tikz():
             try:
                 code = convert_svg(origin_file, crop=True, wrap=True, codeoutput=self.codeoutput,
                                     returnstring=True, scale=self.scale, latexpathtype=False)
-                code = code.split("\globalscale {", 1)
-                code_f = code[0]
-                code_a = code[1].split("}\n", 1)[1]
-                code = code_f + \
-                    "\globalscale {" + \
-                        f"{1/self.linewidth_scale:.4f}" + "}\n" + code_a
+                if self.codeoutput != "codeonly":
+                    code = code.split("\globalscale {", 1)
+                    code_f = code[0]
+                    code_a = code[1].split("}\n", 1)[1]
+                    code = code_f + "\globalscale {" f"{1/self.linewidth_scale:.4f}" + "}\n" + code_a
             except:
                 self.error_svg.append(origin_file.split(self.svg_folder)[1])
                 print(f"   {origin_file.split(self.svg_folder)[1]} \t xx")
