@@ -145,9 +145,9 @@ class pdf2tikz():
             origin_file = ori[idx]
             save_file = dest[idx]
             if self.text2path:
-                cmd = f'{self.inkscape_path} {origin_file} -o {save_file} --actions="select-all;object-to-path"'
-            else:
                 cmd = f'{self.inkscape_path} {origin_file} -o {save_file} --pdf-poppler --actions="select-all;object-to-path"'
+            else:
+                cmd = f'{self.inkscape_path} {origin_file} -o {save_file} --actions="select-all;object-to-path"'
             os.system(cmd)
             print(f"   {origin_file.split(self.pdf_folder)[1]} \t -> \t {save_file.split(self.svg_folder)[1]}")
 
