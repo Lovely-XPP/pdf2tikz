@@ -2,10 +2,19 @@ from tikz_export import convert_svg
 import os, sys
 
 
+# inkscape path setting
 inkscape_path = "/Applications/Inkscape.app/Contents/MacOS/inkscape"
-scale = 0.01
+
+# process setting
+eps_pdf = True
+pdf_svg = True
+svg_tikz = True
+
+# generate setting
+scale = 0.015
 linewidth_scale = 0.1
 
+# folder setting
 eps_folder = os.path.join(sys.path[0], 'eps')
 pdf_folder = os.path.join(sys.path[0], 'pdf')
 svg_folder = os.path.join(sys.path[0], 'svg')
@@ -98,8 +107,6 @@ def svg2tikz():
                 code_f = code[0]
                 code_a = code[1].split("}\n", 1)[1]
                 code = code_f + "\globalscale {" + f"{1/linewidth_scale:.4f}" + "}\n" + code_a
-                code = code.replace(
-                    "\path[", "%\path[", 1)
             except:
                 error_svg.append(origin_file.split(svg_folder)[1])
                 print(f"   {origin_file.split(svg_folder)[1]} \t xx")
@@ -119,9 +126,12 @@ def svg2tikz():
 
 def main():
     init()
-    eps2pdf()
-    pdf2svg()
-    svg2tikz()
+    if eps_pdf:
+        eps2pdf()
+    if pdf_svg:
+        pdf2svg()
+    if svg_tikz:
+        svg2tikz()
 
 if __name__ == "__main__":
     main()
