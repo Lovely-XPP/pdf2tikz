@@ -1,16 +1,14 @@
 # pdf2tikz
 Convert pdf (Vector Graph) to Tikz code.
 
-## Requirments
-Inkscape
+## Requirements
+Inkscape (official website: https://inkscape.org)
 
 ## Usage
-Set Absolute path of `inkscape.exe` (Windows) or `inkscape` (Linux or MacOS) to `pdf2tikz.py`.
+You can change the setting in `pdf2tikz.py`.
 
-For example:
-```python
-inkscape_path = "/Applications/Inkscape.app/Contents/MacOS/inkscape"
-```
+***Tips: You must set the correct Absolute path of `inkscape.exe` (Windows) or `inkscape` (Binary in Linux or MacOS) to `pdf2tikz.py`.***
+
 
 ## Credit
 - [xyz2tex/svg2tikz](https://github.com/xyz2tex/svg2tikz)
