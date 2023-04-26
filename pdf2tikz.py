@@ -2,6 +2,7 @@ from tikz_export import convert_svg
 import os, sys
 
 
+### -------------- Settings -------------- ###
 # inkscape path setting
 inkscape_path = "/Applications/Inkscape.app/Contents/MacOS/inkscape"
 
@@ -21,6 +22,8 @@ svg_folder = os.path.join(sys.path[0], 'svg')
 tikz_folder = os.path.join(sys.path[0], 'tikz')
 
 
+
+### -------------- functions -------------- ###
 ''' mkdirs '''
 def init():
     print("[Info] Start")
@@ -124,7 +127,9 @@ def svg2tikz():
         for error in error_svg:
             print(f"   {error}")
 
-def main():
+
+
+if __name__ == "__main__":
     init()
     if eps_pdf:
         eps2pdf()
@@ -132,6 +137,3 @@ def main():
         pdf2svg()
     if svg_tikz:
         svg2tikz()
-
-if __name__ == "__main__":
-    main()
