@@ -14,8 +14,12 @@ svg_tikz = True
 text2path = True
 
 # generate setting
-scale = 0.015
-linewidth_scale = 0.2
+scale = 0.02
+linewidth_scale = 0.1
+
+# output setting
+modes = ["standalone", "codeonly", "figonly"]
+outputmode = modes[1]
 
 if __name__ == "__main__":
     run = pdf2tikz(
@@ -26,6 +30,7 @@ if __name__ == "__main__":
         text2path = text2path,
         scale = scale,
         linewidth_scale = linewidth_scale,
+        codeoutput=outputmode,
         thread = thread
-    )
+        )
     run.run()

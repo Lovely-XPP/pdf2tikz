@@ -13,6 +13,7 @@ class pdf2tikz():
                  text2path: bool = True,
                  scale: float = 1,
                  linewidth_scale: float = 1,
+                 codeoutput: str = "standalone",
                  thread: int = 1):
         # init var
         self.inkscape_path = inkscape_path
@@ -22,6 +23,7 @@ class pdf2tikz():
         self.text2path = text2path
         self.scale = scale
         self.linewidth_scale = linewidth_scale
+        self.codeoutput = codeoutput
         self.thread = thread
         self.eps_folder = os.path.join(sys.path[0], 'eps')
         self.pdf_folder = os.path.join(sys.path[0], 'pdf')
@@ -157,7 +159,7 @@ class pdf2tikz():
             origin_file = ori[idx]
             save_file = dest[idx]
             try:
-                code = convert_svg(origin_file, crop=True, wrap=True,
+                code = convert_svg(origin_file, crop=True, wrap=True, codeoutput=self.codeoutput,
                                     returnstring=True, scale=self.scale, latexpathtype=False)
                 code = code.split("\globalscale {", 1)
                 code_f = code[0]
