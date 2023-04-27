@@ -20,7 +20,10 @@ linewidth_scale = 0.1
 # output setting
 modes = ["standalone", "figonly", "codeonly"]
 outputmode = modes[1]
-combine_res = True
+combine_setting ={
+    "enable": True,
+    "fig_env": True
+}
 
 
 if __name__ == "__main__":
@@ -33,7 +36,7 @@ if __name__ == "__main__":
         scale = scale,
         linewidth_scale = linewidth_scale,
         codeoutput=outputmode,
-        combine_res = combine_res,
+        combine_setting = combine_setting,
         thread = thread
         )
     run.run()

@@ -21,7 +21,7 @@ class pdf2tikz():
                  scale: float = 1,
                  linewidth_scale: float = 1,
                  codeoutput: str = "standalone",
-                 combine_res: bool = False,
+                 combine_setting: dict = {},
                  thread: int = 1):
         # init var
         self.inkscape_path = inkscape_path
@@ -32,7 +32,6 @@ class pdf2tikz():
         self.scale = scale
         self.linewidth_scale = linewidth_scale
         self.codeoutput = codeoutput
-        self.combine_res = combine_res
         self.thread = thread
         self.eps_folder = os.path.join(sys.path[0], 'eps')
         self.pdf_folder = os.path.join(sys.path[0], 'pdf')
@@ -40,6 +39,15 @@ class pdf2tikz():
         self.tikz_folder = os.path.join(sys.path[0], 'tikz')
         self.outfiles = []
         self.error_svg = []
+        self.combine_setting = {
+            "enable": False,
+            "fig_env": False
+        }
+        keys = self.combine_setting.keys()
+        for key in combine_setting.keys():
+            if key in keys:
+                self.combine_setting[key] = combine_setting[key]
+
 
         print("[Info] Start")
         # mkdir
@@ -148,12 +156,24 @@ class pdf2tikz():
         print("\n[Info] Generate main.tex")
         main_code = TEMPLATE
         self.outfiles.sort()
-        for idx, tikz_code in enumerate(self.outfiles):
-            filename = os.path.split(tikz_code)[1]
-            filename = os.path.splitext(filename)[0]
-            main_code = main_code + "\n" + r"\centerline{" + r"\input{" + tikz_code.strip("/") + r"}}" "\n"
-            main_code = main_code + r"\captionof{figure}{" + filename.replace("_", "\_") + r"}" + "\n"
-            main_code = main_code + r"\vspace{5mm}" + "\n\n"
+        if self.combine_setting['fig_env']:
+            for idx, tikz_code in enumerate(self.outfiles):
+                if idx > 0 and idx % 2 == 0:
+                    main_code = main_code + r"\clearpage" + "\n\n"
+                filename = os.path.split(tikz_code)[1]
+                filename = os.path.splitext(filename)[0]
+                main_code = main_code + "\n" + r"\begin{figure}[!htb]" + "\n"
+                main_code = main_code + "\t" + r"\centering" + "\n"
+                main_code = main_code + "\t" + r"\input{" + tikz_code.strip("/") + r"}" + "\n"
+                main_code = main_code + "\t" + r"\captionof{figure}{" + filename.replace("_", "\_") + r"}" + "\n"
+                main_code = main_code + r"\end{figure}" + "\n\n"
+        else:
+            for idx, tikz_code in enumerate(self.outfiles):
+                filename = os.path.split(tikz_code)[1]
+                filename = os.path.splitext(filename)[0]
+                main_code = main_code + "\n" + r"\centerline{" + r"\input{" + tikz_code.strip("/") + r"}}" + "\n"
+                main_code = main_code + r"\captionof{figure}{" + filename.replace("_", "\_") + r"}" + "\n"
+                main_code = main_code + r"\vspace{5mm}" + "\n\n"
         main_code = main_code + "\n" + r"\end{document}"
         main_file = os.path.join(self.tikz_folder, "main.tex")
         with open(main_file, 'w') as f:
@@ -214,5 +234,5 @@ class pdf2tikz():
             self.pdf2svg()
         if self.svg_tikz:
             self.svg2tikz()
-        if self.combine_res:
+        if self.combine_setting['enable']:
             self.combine_tikz()
